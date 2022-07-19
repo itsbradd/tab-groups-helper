@@ -1,6 +1,4 @@
-import { TextField } from '@mui/material';
 import './Popup.scss';
-import { ColorPicker } from '../ColorPicker';
 import { TabMenu } from '../TabMenu';
 import { SyntheticEvent, useState } from 'react';
 import { TabPanel } from '../TabPanel';

@@ -7,9 +7,14 @@ import * as colorPalette from '@mui/material/colors';
 export const Group = () => {
 	return (
 		<div className='group'>
-			<div className='group__name' style={{
-				backgroundColor: colorPalette['grey'][500]
-			}}>Testing</div>
+			<div
+				className='group__name'
+				style={{
+					backgroundColor: colorPalette['grey'][500],
+				}}
+			>
+				Testing
+			</div>
 			<IconButton size='medium'>
 				<EditIcon fontSize='small' />
 			</IconButton>
