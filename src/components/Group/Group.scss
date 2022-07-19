@@ -1,0 +1,11 @@
+.group {
+  display: flex;
+  align-items: center;
+
+  &__name {
+    padding: 5px 10px;
+    border-radius: 5px;
+    color: white;
+    margin-right: 12px;
+  }
+}

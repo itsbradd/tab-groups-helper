@@ -1,0 +1,12 @@
+.color-picker {
+	padding: 18px 18px 0;
+	&.MuiFormGroup-root {
+		display: grid;
+		grid-template-columns: repeat(3, 1fr);
+
+		.MuiFormControlLabel-label {
+			text-transform: capitalize;
+			font-size: 14px;
+		}
+	}
+}
