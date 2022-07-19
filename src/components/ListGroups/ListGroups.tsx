@@ -2,18 +2,17 @@ import { Group } from '../Group';
 import { IconButton } from '@mui/material';
 import AddIcon from '@mui/icons-material/Add';
 import './ListGroups.scss';
-import { FC } from 'react';
+import {useContext} from "react";
+import {EditContext} from "../Popup";
 
-interface Props {
-	handleClickAdd?: () => void;
-}
+export const ListGroups = () => {
+	const editContext = useContext(EditContext)
 
-export const ListGroups: FC<Props> = ({ handleClickAdd }) => {
 	return (
 		<div className='list-groups'>
 			<Group />
 			<IconButton
-				onClick={handleClickAdd}
+				onClick={() => editContext.setIsEditing(true)}
 				className='button-add'
 				color='primary'
 			>

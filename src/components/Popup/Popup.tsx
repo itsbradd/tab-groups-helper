@@ -17,10 +17,6 @@ export const Popup = () => {
 		setTabIndex(tabIndex);
 	}
 
-	function handleClickAdd() {
-		setIsEditing(true);
-	}
-
 	return (
 		<EditContext.Provider
 			value={{
@@ -38,7 +34,7 @@ export const Popup = () => {
 						<TabMenu value={tabIndex} handleChange={handleChangeTab} />
 						<div className='popup__inner'>
 							<TabPanel currentTabIndex={tabIndex} tabIndex={0}>
-								<ListGroups handleClickAdd={handleClickAdd} />
+								<ListGroups />
 							</TabPanel>
 						</div>
 					</>
