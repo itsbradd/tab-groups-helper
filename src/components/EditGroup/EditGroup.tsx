@@ -3,6 +3,7 @@ import { ColorPicker } from '../ColorPicker';
 import './EditGroup.scss';
 import { useContext } from 'react';
 import { EditContext } from '../Popup';
+import {MatchingRule} from "../MatchingRule";
 
 export const EditGroup = () => {
 	const editContext = useContext(EditContext);
@@ -10,6 +11,9 @@ export const EditGroup = () => {
 		<div className='edit-group'>
 			<TextField size='small' variant='filled' fullWidth label='Group name' />
 			<ColorPicker />
+			<div className="matching-rules">
+				<MatchingRule />
+			</div>
 			<div className='bottom-actions'>
 				<div className='bottom-actions__left'></div>
 				<div className='bottom-actions__right'>

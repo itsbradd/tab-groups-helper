@@ -2,11 +2,11 @@ import { Group } from '../Group';
 import { IconButton } from '@mui/material';
 import AddIcon from '@mui/icons-material/Add';
 import './ListGroups.scss';
-import {useContext} from "react";
-import {EditContext} from "../Popup";
+import { useContext } from 'react';
+import { EditContext } from '../Popup';
 
 export const ListGroups = () => {
-	const editContext = useContext(EditContext)
+	const editContext = useContext(EditContext);
 
 	return (
 		<div className='list-groups'>
