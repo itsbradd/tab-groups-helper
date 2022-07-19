@@ -1,0 +1,11 @@
+# package
+node_modules
+
+# cache
+*cache
+
+# assets
+assets
+
+# build
+dist

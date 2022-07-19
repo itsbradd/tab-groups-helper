@@ -1,0 +1,10 @@
+node_modules
+
+*cache
+
+dist
+
+.ide
+.idea
+.vscode
+.vs
