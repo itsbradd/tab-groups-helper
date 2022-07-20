@@ -1,6 +1,3 @@
-export enum MatchingTargets {
-	Hostname = 'hostname',
-	Url = 'url',
-}
+import { MatchingTargets } from '../types';
 
 export default Object.values(MatchingTargets);

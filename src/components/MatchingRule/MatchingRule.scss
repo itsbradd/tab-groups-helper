@@ -1,0 +1,11 @@
+.matching-rule {
+	display: flex;
+	.MuiTextField-root {
+		flex-grow: 1;
+		margin: 8px;
+	}
+
+	&__actions {
+        margin-top: 8px;
+	}
+}

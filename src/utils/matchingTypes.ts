@@ -1,10 +1,3 @@
-export enum MatchingTypes {
-	Includes = 'include',
-	BeginsWith = 'begins with',
-	EndsWith = 'ends with',
-	Equals = 'equals',
-	Regex = 'regex'
-}
+import { MatchingTypes } from '../types';
 
 export default Object.values(MatchingTypes);
-
