@@ -4,29 +4,53 @@ import './EditGroup.scss';
 import { useContext, useState } from 'react';
 import { EditContext } from '../Popup';
 import { MatchingRule as MatchingRuleComp } from '../MatchingRule';
-import { MatchingRule, MatchingTargets, MatchingTypes } from '../../types';
+import {
+	GroupConfig,
+	MatchingRule,
+	MatchingTargets,
+	MatchingTypes,
+} from '../../types';
 import { useInput } from '../../hooks';
 import colors from '../../utils/colors';
+import {
+	getGroupConfigById,
+	addGroupsConfig,
+	editGroupConfig,
+} from '../../services/groupConfigurations';
+import { formatMatchingRule } from '../../utils/matchingRules';
 
 export const EditGroup = () => {
 	const editContext = useContext(EditContext);
-	const groupName = useInput('', (newGroupName) => {
-		if (!newGroupName) setErrorGroup('Please input group name!');
-		else setErrorGroup('')
-	});
+	let editingGroup: GroupConfig | undefined;
+	if (editContext.id) {
+		editingGroup = getGroupConfigById(editContext.id);
+	}
+
+	const groupName = useInput(
+		editingGroup ? editingGroup.name : '',
+		(newGroupName) => {
+			if (!newGroupName) setErrorGroup('Please input group name!');
+			else setErrorGroup('');
+		}
+	);
 	const [errorGroup, setErrorGroup] = useState('');
-	const color = useInput(colors[0]);
+	const color = useInput(editingGroup ? editingGroup.color : colors[0]);
+
 	const [matchingRules, setMatchingRules] = useState<
 		(MatchingRule & { error: string })[]
-	>([
-		{
-			id: Date.now(),
-			target: MatchingTargets.Hostname,
-			type: MatchingTypes.Includes,
-			value: '',
-			error: '',
-		},
-	]);
+	>(
+		editingGroup
+			? editingGroup.rules.map((rule) => ({ ...rule, error: '' }))
+			: [
+					{
+						id: Date.now(),
+						target: MatchingTargets.Hostname,
+						type: MatchingTypes.Includes,
+						value: '',
+						error: '',
+					},
+			  ]
+	);
 
 	function handleAdd() {
 		setMatchingRules((pre) => {
@@ -51,7 +75,7 @@ export const EditGroup = () => {
 
 	function handleRuleChange(index: number, name: string, value: string) {
 		setMatchingRules((pre) => {
-			const rules = [...pre]
+			const rules = [...pre];
 			// @ts-ignore
 			rules[index][name] = value;
 
@@ -59,25 +83,52 @@ export const EditGroup = () => {
 			if (textValue) rules[index].error = '';
 			else rules[index].error = 'Please input value!';
 
-			return rules
-		})
+			return rules;
+		});
 	}
 
-	function handleSave() {
-		if (!groupName.value) setErrorGroup('Please input group name!')
+	function handleCancel() {
+		editContext.setIsEditing(false);
+	}
+
+	async function handleSave() {
+		if (!groupName.value) setErrorGroup('Please input group name!');
 		let error = false;
 		setMatchingRules((pre) => {
-				return pre.map((rule) => {
-					if (!rule.value) {
-						error = true;
-						return {
-							...rule,
-							error: 'Please input value!'
-						}
-					}
-					return rule
-				})
-		})
+			const groups = pre.map((rule) => {
+				if (!rule.value) {
+					error = true;
+					return {
+						...rule,
+						error: 'Please input value!',
+					};
+				}
+				return rule;
+			});
+
+			if (!error) {
+				if (editingGroup) {
+					editGroupConfig({
+						name: groupName.value,
+						color: color.value as chrome.tabGroups.ColorEnum,
+						rules: matchingRules.map((rule) => formatMatchingRule(rule)),
+						id: editingGroup.id,
+					}).then(() => {
+						handleCancel();
+					});
+				} else {
+					addGroupsConfig({
+						name: groupName.value,
+						color: color.value as chrome.tabGroups.ColorEnum,
+						rules: matchingRules.map((rule) => formatMatchingRule(rule)),
+						id: new Date().getTime(),
+					}).then(() => {
+						handleCancel();
+					});
+				}
+			}
+			return groups;
+		});
 	}
 
 	return (
@@ -101,10 +152,10 @@ export const EditGroup = () => {
 						onClickDelete={handleDelete}
 						onClickAdd={handleAdd}
 						value={{
-							...rule
+							...rule,
 						}}
 						onChange={(name, value) => {
-							handleRuleChange(index, name, value)
+							handleRuleChange(index, name, value);
 						}}
 					/>
 				))}
@@ -112,11 +163,7 @@ export const EditGroup = () => {
 			<div className='bottom-actions'>
 				<div className='bottom-actions__left'></div>
 				<div className='bottom-actions__right'>
-					<Button
-						variant='outlined'
-						size='small'
-						onClick={() => editContext.setIsEditing(false)}
-					>
+					<Button variant='outlined' size='small' onClick={handleCancel}>
 						Cancel
 					</Button>
 					<Button

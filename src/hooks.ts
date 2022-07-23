@@ -1,7 +1,10 @@
 import { ChangeEvent, useState } from 'react';
 import { SelectChangeEvent } from '@mui/material';
 
-export const useInput = (initValue: string, effect?: (value: string) => void) => {
+export const useInput = (
+	initValue: string,
+	effect?: (value: string) => void
+) => {
 	const [value, setValue] = useState(initValue);
 	function handleChange(
 		event:

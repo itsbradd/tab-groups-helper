@@ -6,13 +6,17 @@ import { ListGroups } from '../ListGroups';
 import { EditGroup } from '../EditGroup';
 
 export const EditContext = createContext({
+	id: undefined as number | undefined,
 	isEditing: false,
-	setIsEditing: (editState: boolean) => {},
+	setIsEditing: (editState: boolean, id?: number) => {},
 });
 
 export const Popup = () => {
 	const [tabIndex, setTabIndex] = useState(0);
 	const [isEditing, setIsEditing] = useState(false);
+	const [editingGroupId, setEditingGroupId] = useState<number | undefined>(
+		undefined
+	);
 	function handleChangeTab(event: SyntheticEvent, tabIndex: number) {
 		setTabIndex(tabIndex);
 	}
@@ -20,8 +24,10 @@ export const Popup = () => {
 	return (
 		<EditContext.Provider
 			value={{
+				id: editingGroupId,
 				isEditing,
-				setIsEditing: (editState) => {
+				setIsEditing: (editState, groupId) => {
+					setEditingGroupId(groupId);
 					setIsEditing(editState);
 				},
 			}}

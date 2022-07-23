@@ -2,7 +2,8 @@ import {
 	FormControl,
 	IconButton,
 	MenuItem,
-	Select, SelectChangeEvent,
+	Select,
+	SelectChangeEvent,
 	TextField,
 } from '@mui/material';
 import matchingTargets from '../../utils/matchingTargets';
@@ -11,17 +12,17 @@ import './MatchingRule.scss';
 import AddIcon from '@mui/icons-material/Add';
 import DeleteIcon from '@mui/icons-material/Delete';
 import { MatchingRule as MatchingRuleType } from '../../types';
-import {ChangeEvent, FC} from 'react';
+import { ChangeEvent, FC } from 'react';
 
 interface Props {
 	onClickAdd?: () => void;
 	onClickDelete?: (id: number) => void;
 	matchingRule: MatchingRuleType & { error: string };
 	value: {
-		value: string,
-		target: string,
-		type: string
-	},
+		value: string;
+		target: string;
+		type: string;
+	};
 	onChange: (name: string, value: string) => void;
 }
 
@@ -30,14 +31,14 @@ export const MatchingRule: FC<Props> = ({
 	onClickDelete,
 	matchingRule,
 	value,
-	onChange
+	onChange,
 }) => {
 	function handleChange(
 		event:
 			| SelectChangeEvent
 			| ChangeEvent<HTMLInputElement | HTMLTextAreaElement>
 	) {
-		onChange(event.target.name, event.target.value)
+		onChange(event.target.name, event.target.value);
 	}
 
 	function handleClickDelete() {
@@ -47,7 +48,12 @@ export const MatchingRule: FC<Props> = ({
 	return (
 		<div className='matching-rule'>
 			<FormControl sx={{ m: 1, width: 120, textTransform: 'capitalize' }}>
-				<Select name='target' value={value.target} onChange={handleChange} size='small'>
+				<Select
+					name='target'
+					value={value.target}
+					onChange={handleChange}
+					size='small'
+				>
 					{matchingTargets.map((t) => (
 						<MenuItem key={t} sx={{ textTransform: 'capitalize' }} value={t}>
 							{t}
@@ -56,7 +62,12 @@ export const MatchingRule: FC<Props> = ({
 				</Select>
 			</FormControl>
 			<FormControl sx={{ m: 1, width: 100, textTransform: 'capitalize' }}>
-				<Select name='type' value={value.type} onChange={handleChange} size='small'>
+				<Select
+					name='type'
+					value={value.type}
+					onChange={handleChange}
+					size='small'
+				>
 					{matchingTypes.map((t) => (
 						<MenuItem key={t} sx={{ textTransform: 'capitalize' }} value={t}>
 							{t}

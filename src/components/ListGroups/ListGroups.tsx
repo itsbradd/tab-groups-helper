@@ -2,15 +2,40 @@ import { Group } from '../Group';
 import { IconButton } from '@mui/material';
 import AddIcon from '@mui/icons-material/Add';
 import './ListGroups.scss';
-import { useContext } from 'react';
+import { useContext, useEffect, useState } from 'react';
 import { EditContext } from '../Popup';
+import { GroupConfig } from '../../types';
+import {
+	deleteGroupConfig,
+	getGroupsConfig,
+} from '../../services/groupConfigurations';
 
 export const ListGroups = () => {
 	const editContext = useContext(EditContext);
+	const [groups, setGroups] = useState<GroupConfig[]>([]);
+
+	async function getGroupsConfigData() {
+		setGroups(await getGroupsConfig());
+	}
+
+	useEffect(() => {
+		getGroupsConfigData();
+	}, []);
 
 	return (
 		<div className='list-groups'>
-			<Group />
+			{groups.map((group) => (
+				<Group
+					key={group.id}
+					id={group.id}
+					name={group.name}
+					color={group.color}
+					onDelete={async (id) => {
+						await deleteGroupConfig(id);
+						getGroupsConfigData();
+					}}
+				/>
+			))}
 			<IconButton
 				onClick={() => editContext.setIsEditing(true)}
 				className='button-add'

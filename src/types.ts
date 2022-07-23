@@ -17,3 +17,10 @@ export enum MatchingTypes {
 	Equals = 'equals',
 	Regex = 'regex',
 }
+
+export interface GroupConfig {
+	id: number;
+	name: string;
+	color: chrome.tabGroups.ColorEnum;
+	rules: MatchingRule[];
+}

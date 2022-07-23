@@ -1,3 +1,13 @@
-chrome.tabs.onUpdated.addListener((tabId, changeInfo, tab) => {
-	console.log(tabId, changeInfo, tab);
-});
+import {
+	initGroupsConfigValue,
+	startWatchingGroupsConfig,
+} from './services/groupConfigurations';
+
+async function bootstrap() {
+	const data = await initGroupsConfigValue();
+	startWatchingGroupsConfig((newValue, oldValue) => {
+		console.log(newValue, oldValue);
+	});
+}
+
+bootstrap();
