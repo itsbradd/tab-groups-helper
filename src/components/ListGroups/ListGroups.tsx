@@ -5,17 +5,18 @@ import './ListGroups.scss';
 import { useContext, useEffect, useState } from 'react';
 import { EditContext } from '../Popup';
 import { GroupConfig } from '../../types';
+import {} from '../../services/groupsConfigurations';
 import {
 	deleteGroupConfig,
-	getGroupsConfig,
-} from '../../services/groupConfigurations';
+	getGroupsConfigurations,
+} from '../../services/state/groupsConfigurationsState';
 
 export const ListGroups = () => {
 	const editContext = useContext(EditContext);
 	const [groups, setGroups] = useState<GroupConfig[]>([]);
 
 	async function getGroupsConfigData() {
-		setGroups(await getGroupsConfig());
+		setGroups(getGroupsConfigurations());
 	}
 
 	useEffect(() => {

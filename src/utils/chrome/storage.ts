@@ -2,10 +2,11 @@ import AreaName = chrome.storage.AreaName;
 import StorageChange = chrome.storage.StorageChange;
 
 export function getStorageData<T>(
-	key: string | string[] | { [p: string]: any } | null
+	key: string | string[] | { [p: string]: any } | null,
+	area = 'sync'
 ) {
 	return new Promise<T>((resolve, reject) => {
-		chrome.storage.sync.get(key, (item) => {
+		(chrome.storage as any)[area].get(key, (item: { [p: string]: any }) => {
 			// Pass any observed errors down the promise chain.
 			if (chrome.runtime.lastError) {
 				return reject(chrome.runtime.lastError);
@@ -18,21 +19,22 @@ export function getStorageData<T>(
 	});
 }
 
-export function setStorageData<T>(key: string, value: T) {
+export function setStorageData<T>(key: string, value: T, area = 'sync') {
 	return new Promise<void>((resolve, reject) => {
-		chrome.storage.sync.set({ [key]: value }, () => resolve());
+		(chrome.storage as any)[area].set({ [key]: value }, () => resolve());
 	});
 }
 
 export function watchStorage<T>(
 	key: string,
-	callback: (newValue: T, oldValue: T) => void
+	callback: (newValue: T, oldValue: T) => void,
+	area = 'sync'
 ) {
 	const handler: (
 		changes: { [p: string]: StorageChange },
 		areaName: AreaName
-	) => void = (changes) => {
-		if (!(key in changes)) return;
+	) => void = (changes, areaName) => {
+		if (!(key in changes) || areaName !== area) return;
 		const { newValue, oldValue } = changes[key];
 		if (JSON.stringify(newValue) === JSON.stringify(oldValue)) return;
 		callback(newValue, oldValue);

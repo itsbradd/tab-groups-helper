@@ -12,12 +12,13 @@ import {
 } from '../../types';
 import { useInput } from '../../hooks';
 import colors from '../../utils/colors';
+import {} from '../../services/groupsConfigurations';
+import { formatMatchingRule } from '../../utils/matchingRules';
 import {
-	getGroupConfigById,
 	addGroupsConfig,
 	editGroupConfig,
-} from '../../services/groupConfigurations';
-import { formatMatchingRule } from '../../utils/matchingRules';
+	getGroupConfigById,
+} from '../../services/state/groupsConfigurationsState';
 
 export const EditGroup = () => {
 	const editContext = useContext(EditContext);
