@@ -19,6 +19,7 @@ import {
 	editGroupConfig,
 	getGroupConfigById,
 } from '../../services/state/groupsConfigurationsState';
+import { SettingLayout } from '../SettingLayout';
 
 export const EditGroup = () => {
 	const editContext = useContext(EditContext);
@@ -133,7 +134,7 @@ export const EditGroup = () => {
 	}
 
 	return (
-		<div className='edit-group'>
+		<SettingLayout onClickSave={handleSave} className='edit-group'>
 			<TextField
 				{...groupName}
 				error={!!errorGroup}
@@ -161,22 +162,6 @@ export const EditGroup = () => {
 					/>
 				))}
 			</div>
-			<div className='bottom-actions'>
-				<div className='bottom-actions__left'></div>
-				<div className='bottom-actions__right'>
-					<Button variant='outlined' size='small' onClick={handleCancel}>
-						Cancel
-					</Button>
-					<Button
-						className='bottom-actions__save'
-						onClick={handleSave}
-						size='small'
-						variant='contained'
-					>
-						Save
-					</Button>
-				</div>
-			</div>
-		</div>
+		</SettingLayout>
 	);
 };

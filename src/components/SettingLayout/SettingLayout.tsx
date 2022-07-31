@@ -28,7 +28,7 @@ export const SettingLayout: FC<Props> = ({
 			<div className='bottom-actions'>
 				<div className='bottom-actions__left'></div>
 				<div className='bottom-actions__right'>
-					{showCancel ?? (
+					{showCancel && (
 						<Button variant='outlined' size='small' onClick={handleCancel}>
 							Cancel
 						</Button>
