@@ -15,3 +15,7 @@ export async function getAllTabs(queryInfo?: chrome.tabs.QueryInfo) {
 export async function getTab(tabId: number) {
 	return await chrome.tabs.get(tabId);
 }
+
+export async function ungroupTab(tab: chrome.tabs.Tab) {
+	return await chrome.tabs.ungroup(tab.id ?? 0);
+}

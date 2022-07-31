@@ -1,5 +1,5 @@
 import { MatchingTypes } from '../types';
-import { assignTabToGroup, getTab } from '../utils/chrome/tabs';
+import {assignTabToGroup, getTab, ungroupTab} from '../utils/chrome/tabs';
 import {getGroupTitleByHostname, updateGroup} from '../utils/chrome/groups';
 import TabChangeInfo = chrome.tabs.TabChangeInfo;
 import {
@@ -10,28 +10,41 @@ import {
 import { getGroupsConfigurations } from './state/groupsConfigurationsState';
 import colors from "../utils/colors";
 
-async function repeatUntilSuccess(
+async function repeatAssignTabUntilSuccess(
 	groupId: number | undefined,
 	tab: chrome.tabs.Tab
 ): Promise<number> {
 	try {
 		return await assignTabToGroup(groupId, tab);
 	} catch (e) {
-		return await repeatUntilSuccess(groupId, tab);
+		return await repeatAssignTabUntilSuccess(groupId, tab);
+	}
+}
+
+async function repeatUnGroupTabUntilSuccess(
+	tab: chrome.tabs.Tab
+): Promise<void> {
+	try {
+		return await ungroupTab(tab);
+	} catch (e) {
+		return await repeatUnGroupTabUntilSuccess(tab);
 	}
 }
 
 export async function arrangeTabToGroup(tab: chrome.tabs.Tab) {
 	const groupConfig = getGroupConfigForTab(tab);
+	const isAutoEnabled = false;
+	const isStrictEnabled = true;
 	if (!groupConfig) {
-		await arrangeTabToGroupByUrl(tab);
+		if (isAutoEnabled) await arrangeTabToGroupByUrl(tab);
+		if (isStrictEnabled) await repeatUnGroupTabUntilSuccess(tab);
 		return;
 	}
 
 	let groupId = getGroupIdFromGroupConfig(groupConfig, tab.windowId);
 	const isGroupCreated = !!groupId;
 	if (tab.groupId === groupId) return;
-	groupId = (await repeatUntilSuccess(groupId, tab)) as number;
+	groupId = (await repeatAssignTabUntilSuccess(groupId, tab)) as number;
 
 	if (!isGroupCreated) {
 		addGroup(await updateGroup(groupId, groupConfig));
@@ -46,7 +59,7 @@ async function arrangeTabToGroupByUrl(tab: chrome.tabs.Tab) {
 	let groupId = getGroupIdByTitle(groupTitle, tab.windowId);
 	const isGroupCreated = !!groupId;
 	if (tab.groupId === groupId) return;
-	groupId = (await repeatUntilSuccess(groupId, tab)) as number;
+	groupId = (await repeatAssignTabUntilSuccess(groupId, tab)) as number;
 
 	if (!isGroupCreated) {
 		const color = Math.round((Math.random() * colors.length));
