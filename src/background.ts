@@ -47,12 +47,12 @@ async function bootstrap() {
 		if (!group) return;
 		const config = getGroupConfigByGroup(group);
 
+		editGroup(group.id, {
+			name: title ?? '',
+			color,
+		});
 		if (config) {
 			if (title === config.name && color === config.color) return;
-			editGroup(group.id, {
-				name: title ?? '',
-				color,
-			});
 			editGroupConfig(
 				{
 					...config,
