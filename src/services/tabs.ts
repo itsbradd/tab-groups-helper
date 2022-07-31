@@ -1,6 +1,6 @@
 import { MatchingTypes } from '../types';
 import { assignTabToGroup, getTab } from '../utils/chrome/tabs';
-import { updateGroup } from '../utils/chrome/groups';
+import {getGroupTitleByHostname, updateGroup} from '../utils/chrome/groups';
 import TabChangeInfo = chrome.tabs.TabChangeInfo;
 import {
 	addGroup,
@@ -8,6 +8,7 @@ import {
 	getGroupIdFromGroupConfig,
 } from './state/groupsState';
 import { getGroupsConfigurations } from './state/groupsConfigurationsState';
+import colors from "../utils/colors";
 
 async function repeatUntilSuccess(
 	groupId: number | undefined,
@@ -40,16 +41,19 @@ export async function arrangeTabToGroup(tab: chrome.tabs.Tab) {
 async function arrangeTabToGroupByUrl(tab: chrome.tabs.Tab) {
 	if (!tab.url) return;
 	const url = new URL(tab.url);
-	let groupId = getGroupIdByTitle(url.hostname);
+	if (!url.protocol.includes('http')) return;
+	const groupTitle = getGroupTitleByHostname(url.hostname);
+	let groupId = getGroupIdByTitle(groupTitle);
 	const isGroupCreated = !!groupId;
 	if (tab.groupId === groupId) return;
 	groupId = (await repeatUntilSuccess(groupId, tab)) as number;
 
 	if (!isGroupCreated) {
+		const color = Math.round((Math.random() * colors.length));
 		addGroup(
 			await updateGroup(groupId, {
-				color: 'red',
-				name: url.hostname,
+				color: colors[color],
+				name: groupTitle,
 				rules: [],
 				id: new Date().getTime(),
 			})
@@ -93,7 +97,6 @@ export function watchUpdatedTab(callback: (tab: chrome.tabs.Tab) => void) {
 
 export function watchTabMoved(callback: (tab: chrome.tabs.Tab) => void) {
 	chrome.tabs.onMoved.addListener((tabId, detachInfo) => {
-		// console.log(detachInfo.)
 		getTab(tabId).then((tab) => {
 			callback(tab);
 		});
