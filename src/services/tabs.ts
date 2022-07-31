@@ -1,6 +1,6 @@
 import { MatchingTypes } from '../types';
-import {assignTabToGroup, getTab, ungroupTab} from '../utils/chrome/tabs';
-import {getGroupTitleByHostname, updateGroup} from '../utils/chrome/groups';
+import { assignTabToGroup, getTab, ungroupTab } from '../utils/chrome/tabs';
+import { getGroupTitleByHostname, updateGroup } from '../utils/chrome/groups';
 import TabChangeInfo = chrome.tabs.TabChangeInfo;
 import {
 	addGroup,
@@ -8,8 +8,11 @@ import {
 	getGroupIdFromGroupConfig,
 } from './state/groupsState';
 import { getGroupsConfigurations } from './state/groupsConfigurationsState';
-import colors from "../utils/colors";
-import {getAdvancedOptions, getOptionByKey} from "./state/advancedOptionsState";
+import colors from '../utils/colors';
+import {
+	getAdvancedOptions,
+	getOptionByKey,
+} from './state/advancedOptionsState';
 
 async function repeatAssignTabUntilSuccess(
 	groupId: number | undefined,
@@ -70,7 +73,7 @@ async function arrangeTabToGroupByUrl(tab: chrome.tabs.Tab) {
 	groupId = (await repeatAssignTabUntilSuccess(groupId, tab)) as number;
 
 	if (!isGroupCreated) {
-		const color = Math.round((Math.random() * colors.length));
+		const color = Math.round(Math.random() * colors.length);
 		addGroup(
 			await updateGroup(groupId, {
 				color: colors[color],

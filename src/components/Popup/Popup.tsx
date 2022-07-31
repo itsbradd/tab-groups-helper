@@ -12,8 +12,8 @@ import { ListGroups } from '../ListGroups';
 import { EditGroup } from '../EditGroup';
 import { Box, CircularProgress } from '@mui/material';
 import { loadGroupConfigs } from '../../services/state/groupsConfigurationsState';
-import {AdvancedOptions} from "../AdvancedOptions";
-import {loadAdvancedOptions} from "../../services/state/advancedOptionsState";
+import { AdvancedOptions } from '../AdvancedOptions';
+import { loadAdvancedOptions } from '../../services/state/advancedOptionsState';
 
 export const EditContext = createContext({
 	id: undefined as number | undefined,
@@ -23,8 +23,8 @@ export const EditContext = createContext({
 
 export const TabContext = createContext({
 	tabIndex: 0,
-	setTabIndex: (tabIndex: number) => {}
-})
+	setTabIndex: (tabIndex: number) => {},
+});
 
 export const Popup = () => {
 	const [tabIndex, setTabIndex] = useState(0);
@@ -41,7 +41,7 @@ export const Popup = () => {
 	useEffect(() => {
 		Promise.all([loadGroupConfigs(), loadAdvancedOptions()]).then(() => {
 			setLoading(false);
-		})
+		});
 	});
 
 	const tabContent = useMemo(
@@ -74,8 +74,9 @@ export const Popup = () => {
 		<TabContext.Provider
 			value={{
 				tabIndex,
-				setTabIndex
-			}}>
+				setTabIndex,
+			}}
+		>
 			<EditContext.Provider
 				value={{
 					id: editingGroupId,

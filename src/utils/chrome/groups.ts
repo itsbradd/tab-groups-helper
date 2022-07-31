@@ -25,7 +25,8 @@ export function groupFindPredicate(
 
 export function getGroupTitleByHostname(hostname: string) {
 	const splitHostname = hostname.split('.');
-	const groupTitle = splitHostname[0] !== 'www' ? splitHostname[0] : splitHostname[1]
+	const groupTitle =
+		splitHostname[0] !== 'www' ? splitHostname[0] : splitHostname[1];
 
 	return groupTitle.charAt(0).toUpperCase() + groupTitle.slice(1);
 }

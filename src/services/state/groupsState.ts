@@ -35,8 +35,7 @@ export function getGroupIdFromGroupConfig(
 
 export function getGroupIdByTitle(title: string, windowId?: number) {
 	const group = groups.find((g) => {
-		return g.title === title &&
-		(windowId ? g.windowId === windowId : true);
+		return g.title === title && (windowId ? g.windowId === windowId : true);
 	});
 	return group?.id;
 }
