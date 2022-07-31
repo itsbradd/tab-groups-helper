@@ -9,6 +9,7 @@ import {
 } from './state/groupsState';
 import { getGroupsConfigurations } from './state/groupsConfigurationsState';
 import colors from "../utils/colors";
+import {getAdvancedOptions, getOptionByKey} from "./state/advancedOptionsState";
 
 async function repeatAssignTabUntilSuccess(
 	groupId: number | undefined,
@@ -33,10 +34,11 @@ async function repeatUnGroupTabUntilSuccess(
 
 export async function arrangeTabToGroup(tab: chrome.tabs.Tab) {
 	const groupConfig = getGroupConfigForTab(tab);
-	const isAutoEnabled = false;
-	const isStrictEnabled = true;
+	const advancedOptions = getAdvancedOptions();
+	const isAutoEnabled = advancedOptions.autoGroup;
+	const isStrictEnabled = advancedOptions.strict;
 	if (!groupConfig) {
-		if (isAutoEnabled) await arrangeTabToGroupByUrl(tab);
+		if (isAutoEnabled) return await arrangeTabToGroupByUrl(tab);
 		if (isStrictEnabled) await repeatUnGroupTabUntilSuccess(tab);
 		return;
 	}
@@ -54,7 +56,13 @@ export async function arrangeTabToGroup(tab: chrome.tabs.Tab) {
 async function arrangeTabToGroupByUrl(tab: chrome.tabs.Tab) {
 	if (!tab.url) return;
 	const url = new URL(tab.url);
-	if (!url.protocol.includes('http')) return;
+	if (!url.protocol.includes('http')) {
+		const isStrict = getOptionByKey('strict');
+		if (isStrict) {
+			return await repeatUnGroupTabUntilSuccess(tab);
+		}
+	}
+
 	const groupTitle = getGroupTitleByHostname(url.hostname);
 	let groupId = getGroupIdByTitle(groupTitle, tab.windowId);
 	const isGroupCreated = !!groupId;

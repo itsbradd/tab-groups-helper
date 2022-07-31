@@ -15,6 +15,7 @@ export const TabMenu: FC<Props> = ({ value, handleChange }) => {
 				aria-label='basic tabs example'
 			>
 				<Tab label='Groups' />
+				<Tab label='Advanced options' />
 			</Tabs>
 		</Box>
 	);

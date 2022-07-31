@@ -24,3 +24,8 @@ export interface GroupConfig {
 	color: chrome.tabGroups.ColorEnum;
 	rules: MatchingRule[];
 }
+
+export interface AdvancedOptions {
+	strict: boolean;
+	autoGroup: boolean;
+}

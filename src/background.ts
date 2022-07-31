@@ -24,9 +24,11 @@ import {
 	loadAllGroups,
 } from './services/state/groupsState';
 import groupCreation from './utils/groupCreation';
+import {loadAdvancedOptions} from "./services/state/advancedOptionsState";
+import {watchAdvancedOptions} from "./services/advancedOptions";
 
 async function bootstrap() {
-	await Promise.all([loadGroupConfigs(), loadAllGroups()]);
+	await Promise.all([loadGroupConfigs(), loadAllGroups(), loadAdvancedOptions()]);
 
 	async function syncTabsToGroups() {
 		const tabs = await getAllTabs();
@@ -37,6 +39,9 @@ async function bootstrap() {
 
 	await syncTabsToGroups();
 	watchGroupsConfig(async (newValue, oldValue) => {
+		await syncTabsToGroups();
+	});
+	watchAdvancedOptions(async () => {
 		await syncTabsToGroups();
 	});
 	watchUpdatedTab(async (tab) => {
