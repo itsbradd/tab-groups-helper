@@ -24,6 +24,7 @@ interface Props {
 		type: string;
 	};
 	onChange: (name: string, value: string) => void;
+	onKeyDown: (e: any) => void;
 }
 
 export const MatchingRule: FC<Props> = ({
@@ -32,6 +33,7 @@ export const MatchingRule: FC<Props> = ({
 	matchingRule,
 	value,
 	onChange,
+	onKeyDown
 }) => {
 	function handleChange(
 		event:
@@ -84,6 +86,7 @@ export const MatchingRule: FC<Props> = ({
 				onChange={handleChange}
 				error={!!matchingRule.error}
 				helperText={matchingRule.error}
+				onKeyDown={onKeyDown}
 			/>
 			<div className='matching-rule__actions'>
 				<IconButton onClick={onClickAdd} size='medium' color='primary'>

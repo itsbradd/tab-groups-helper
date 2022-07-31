@@ -143,6 +143,12 @@ export const EditGroup = () => {
 				variant='filled'
 				fullWidth
 				label='Group name'
+				onKeyDown={(e) => {
+					console.log(e.key)
+					if (e.key === 'Enter') {
+						handleSave();
+					}
+				}}
 			/>
 			<ColorPicker {...color} />
 			<div className='matching-rules'>
@@ -158,6 +164,11 @@ export const EditGroup = () => {
 						}}
 						onChange={(name, value) => {
 							handleRuleChange(index, name, value);
+						}}
+						onKeyDown={(e) => {
+							if (e.key === 'Enter') {
+								handleSave();
+							}
 						}}
 					/>
 				))}
