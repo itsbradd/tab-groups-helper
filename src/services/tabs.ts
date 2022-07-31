@@ -43,7 +43,7 @@ async function arrangeTabToGroupByUrl(tab: chrome.tabs.Tab) {
 	const url = new URL(tab.url);
 	if (!url.protocol.includes('http')) return;
 	const groupTitle = getGroupTitleByHostname(url.hostname);
-	let groupId = getGroupIdByTitle(groupTitle);
+	let groupId = getGroupIdByTitle(groupTitle, tab.windowId);
 	const isGroupCreated = !!groupId;
 	if (tab.groupId === groupId) return;
 	groupId = (await repeatUntilSuccess(groupId, tab)) as number;

@@ -72,7 +72,9 @@ async function bootstrap() {
 	});
 
 	watchTabMoved(async (tab) => {
-		await arrangeTabToGroup(tab);
+		groupCreation.queue(async () => {
+			await arrangeTabToGroup(tab);
+		})
 	});
 
 	watchTabAttached(async (tab) => {
