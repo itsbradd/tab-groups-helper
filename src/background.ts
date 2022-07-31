@@ -1,6 +1,15 @@
-import { arrangeTabToGroup, watchUpdatedTab } from './services/tabs';
+import {
+	arrangeTabToGroup,
+	watchTabAttached,
+	watchTabMoved,
+	watchUpdatedTab,
+} from './services/tabs';
 import { getAllTabs } from './utils/chrome/tabs';
-import { watchRemovedGroup, watchUpdatedGroup } from './services/groups';
+import {
+	watchCreatedGroup,
+	watchRemovedGroup,
+	watchUpdatedGroup,
+} from './services/groups';
 import {
 	editGroupConfig,
 	getGroupConfigByGroup,
@@ -8,11 +17,13 @@ import {
 } from './services/state/groupsConfigurationsState';
 import { watchGroupsConfig } from './services/groupsConfigurations';
 import {
+	addGroup,
 	deleteGroup,
 	editGroup,
 	getGroupById,
 	loadAllGroups,
 } from './services/state/groupsState';
+import groupCreation from './utils/groupCreation';
 
 async function bootstrap() {
 	await Promise.all([loadGroupConfigs(), loadAllGroups()]);
@@ -54,6 +65,20 @@ async function bootstrap() {
 	});
 	watchRemovedGroup(async (group) => {
 		deleteGroup(group.id);
+	});
+
+	watchCreatedGroup((group) => {
+		addGroup(group);
+	});
+
+	watchTabMoved(async (tab) => {
+		await arrangeTabToGroup(tab);
+	});
+
+	watchTabAttached(async (tab) => {
+		groupCreation.queue(async () => {
+			await arrangeTabToGroup(tab);
+		});
 	});
 }
 

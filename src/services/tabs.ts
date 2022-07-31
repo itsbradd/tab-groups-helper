@@ -1,21 +1,59 @@
 import { MatchingTypes } from '../types';
-import { assignTabToGroup } from '../utils/chrome/tabs';
+import { assignTabToGroup, getTab } from '../utils/chrome/tabs';
 import { updateGroup } from '../utils/chrome/groups';
 import TabChangeInfo = chrome.tabs.TabChangeInfo;
-import { addGroup, getGroupIdFromGroupConfig } from './state/groupsState';
+import {
+	addGroup,
+	getGroupIdByTitle,
+	getGroupIdFromGroupConfig,
+} from './state/groupsState';
 import { getGroupsConfigurations } from './state/groupsConfigurationsState';
+
+async function repeatUntilSuccess(
+	groupId: number | undefined,
+	tab: chrome.tabs.Tab
+): Promise<number> {
+	try {
+		return await assignTabToGroup(groupId, tab);
+	} catch (e) {
+		return await repeatUntilSuccess(groupId, tab);
+	}
+}
 
 export async function arrangeTabToGroup(tab: chrome.tabs.Tab) {
 	const groupConfig = getGroupConfigForTab(tab);
-	if (!groupConfig) return;
+	if (!groupConfig) {
+		await arrangeTabToGroupByUrl(tab);
+		return;
+	}
 
 	let groupId = getGroupIdFromGroupConfig(groupConfig, tab.windowId);
 	const isGroupCreated = !!groupId;
 	if (tab.groupId === groupId) return;
-	groupId = await assignTabToGroup(groupId, tab);
+	groupId = (await repeatUntilSuccess(groupId, tab)) as number;
 
 	if (!isGroupCreated) {
 		addGroup(await updateGroup(groupId, groupConfig));
+	}
+}
+
+async function arrangeTabToGroupByUrl(tab: chrome.tabs.Tab) {
+	if (!tab.url) return;
+	const url = new URL(tab.url);
+	let groupId = getGroupIdByTitle(url.hostname);
+	const isGroupCreated = !!groupId;
+	if (tab.groupId === groupId) return;
+	groupId = (await repeatUntilSuccess(groupId, tab)) as number;
+
+	if (!isGroupCreated) {
+		addGroup(
+			await updateGroup(groupId, {
+				color: 'red',
+				name: url.hostname,
+				rules: [],
+				id: new Date().getTime(),
+			})
+		);
 	}
 }
 
@@ -51,4 +89,21 @@ export function watchUpdatedTab(callback: (tab: chrome.tabs.Tab) => void) {
 			chrome.tabs.onUpdated.removeListener(handler);
 		},
 	};
+}
+
+export function watchTabMoved(callback: (tab: chrome.tabs.Tab) => void) {
+	chrome.tabs.onMoved.addListener((tabId, detachInfo) => {
+		// console.log(detachInfo.)
+		getTab(tabId).then((tab) => {
+			callback(tab);
+		});
+	});
+}
+
+export function watchTabAttached(callback: (tab: chrome.tabs.Tab) => void) {
+	chrome.tabs.onActivated.addListener(({ tabId }) => {
+		getTab(tabId).then((tab) => {
+			callback(tab);
+		});
+	});
 }

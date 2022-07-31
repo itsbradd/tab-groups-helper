@@ -11,3 +11,7 @@ export async function assignTabToGroup(
 export async function getAllTabs(queryInfo?: chrome.tabs.QueryInfo) {
 	return await chrome.tabs.query(queryInfo ?? {});
 }
+
+export async function getTab(tabId: number) {
+	return await chrome.tabs.get(tabId);
+}

@@ -7,6 +7,8 @@ export async function loadAllGroups() {
 	groups = await getAllGroups();
 }
 
+export async function loadGroupById(groupId: number) {}
+
 export function getGroups() {
 	return groups;
 }
@@ -21,13 +23,20 @@ export function getGroupIdFromGroupConfig(
 	groupConfig: GroupConfig,
 	windowId?: number
 ) {
-	const group = groups.find((group) => {
+	const group = groups.find((g) => {
 		return (
-			groupFindPredicate(group)(groupConfig) &&
-			(windowId ? group.windowId === windowId : true)
+			groupFindPredicate(g)(groupConfig) &&
+			(windowId ? g.windowId === windowId : true)
 		);
 	});
 
+	return group?.id;
+}
+
+export function getGroupIdByTitle(title: string) {
+	const group = groups.find((g) => {
+		return g.title === title;
+	});
 	return group?.id;
 }
 
