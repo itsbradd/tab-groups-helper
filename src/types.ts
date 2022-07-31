@@ -11,7 +11,7 @@ export enum MatchingTargets {
 }
 
 export enum MatchingTypes {
-	Includes = 'include',
+	Includes = 'includes',
 	BeginsWith = 'begins with',
 	EndsWith = 'ends with',
 	Equals = 'equals',
