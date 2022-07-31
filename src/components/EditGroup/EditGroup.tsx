@@ -1,4 +1,4 @@
-import { Button, TextField } from '@mui/material';
+import { TextField } from '@mui/material';
 import { ColorPicker } from '../ColorPicker';
 import './EditGroup.scss';
 import { useContext, useState } from 'react';
@@ -12,7 +12,6 @@ import {
 } from '../../types';
 import { useInput } from '../../hooks';
 import colors from '../../utils/colors';
-import {} from '../../services/groupsConfigurations';
 import { formatMatchingRule } from '../../utils/matchingRules';
 import {
 	addGroupsConfig,
@@ -144,7 +143,7 @@ export const EditGroup = () => {
 				fullWidth
 				label='Group name'
 				onKeyDown={(e) => {
-					console.log(e.key)
+					console.log(e.key);
 					if (e.key === 'Enter') {
 						handleSave();
 					}

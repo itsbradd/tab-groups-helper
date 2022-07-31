@@ -33,7 +33,7 @@ export const MatchingRule: FC<Props> = ({
 	matchingRule,
 	value,
 	onChange,
-	onKeyDown
+	onKeyDown,
 }) => {
 	function handleChange(
 		event:
