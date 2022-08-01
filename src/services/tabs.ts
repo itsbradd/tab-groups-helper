@@ -1,10 +1,17 @@
-import {MatchingTargets, MatchingTypes} from '../types';
-import {assignTabToGroup, getTab, ungroupTab} from '../utils/chrome/tabs';
-import {getGroupTitleByHostname, updateGroup} from '../utils/chrome/groups';
-import {addGroup, getGroupIdByTitle, getGroupIdFromGroupConfig,} from './state/groupsState';
-import {getGroupsConfigurations} from './state/groupsConfigurationsState';
+import { MatchingTargets, MatchingTypes } from '../types';
+import { assignTabToGroup, getTab, ungroupTab } from '../utils/chrome/tabs';
+import { getGroupTitleByHostname, updateGroup } from '../utils/chrome/groups';
+import {
+	addGroup,
+	getGroupIdByTitle,
+	getGroupIdFromGroupConfig,
+} from './state/groupsState';
+import { getGroupsConfigurations } from './state/groupsConfigurationsState';
 import colors from '../utils/colors';
-import {getAdvancedOptions, getOptionByKey,} from './state/advancedOptionsState';
+import {
+	getAdvancedOptions,
+	getOptionByKey,
+} from './state/advancedOptionsState';
 import TabChangeInfo = chrome.tabs.TabChangeInfo;
 
 async function repeatAssignTabUntilSuccess(
@@ -79,35 +86,41 @@ async function arrangeTabToGroupByUrl(tab: chrome.tabs.Tab) {
 }
 
 export function getGroupConfigForTab(tab: chrome.tabs.Tab) {
-	const groupsConfigs = getGroupsConfigurations();
-	const url = new URL(tab.url ?? '');
-	for (const config of groupsConfigs) {
-		for (const rule of config.rules) {
-			const matchingTarget = rule.target === MatchingTargets.Hostname ? url.hostname : url.href;
-			switch (rule.type) {
-				case MatchingTypes.Includes: {
-					if (matchingTarget.includes(rule.value)) return config;
-					break;
-				}
-				case MatchingTypes.BeginsWith: {
-					if (matchingTarget.startsWith(rule.value)) return config;
-					break;
-				}
-				case MatchingTypes.EndsWith: {
-					if (matchingTarget.endsWith(rule.value)) return config;
-					break;
-				}
-				case MatchingTypes.Equals: {
-					if (matchingTarget === rule.value) return config;
-					break;
-				}
-				case MatchingTypes.Regex: {
-					const regex = new RegExp(rule.value, 'ig')
-					if (regex.test(matchingTarget)) return config;
-					break;
+	try {
+		const groupsConfigs = getGroupsConfigurations();
+		console.log(tab);
+		const url = new URL(tab.url ?? '');
+		for (const config of groupsConfigs) {
+			for (const rule of config.rules) {
+				const matchingTarget =
+					rule.target === MatchingTargets.Hostname ? url.hostname : url.href;
+				switch (rule.type) {
+					case MatchingTypes.Includes: {
+						if (matchingTarget.includes(rule.value)) return config;
+						break;
+					}
+					case MatchingTypes.BeginsWith: {
+						if (matchingTarget.startsWith(rule.value)) return config;
+						break;
+					}
+					case MatchingTypes.EndsWith: {
+						if (matchingTarget.endsWith(rule.value)) return config;
+						break;
+					}
+					case MatchingTypes.Equals: {
+						if (matchingTarget === rule.value) return config;
+						break;
+					}
+					case MatchingTypes.Regex: {
+						const regex = new RegExp(rule.value, 'ig');
+						if (regex.test(matchingTarget)) return config;
+						break;
+					}
 				}
 			}
 		}
+	} catch (e) {
+		return;
 	}
 }
 
