@@ -62,8 +62,9 @@ async function arrangeTabToGroupByUrl(tab: chrome.tabs.Tab) {
 	if (!url.protocol.includes('http')) {
 		const isStrict = getOptionByKey('strict');
 		if (isStrict) {
-			return await repeatUnGroupTabUntilSuccess(tab);
+			await repeatUnGroupTabUntilSuccess(tab);
 		}
+		return;
 	}
 
 	const groupTitle = getGroupTitleByHostname(url.hostname);
@@ -88,7 +89,6 @@ async function arrangeTabToGroupByUrl(tab: chrome.tabs.Tab) {
 export function getGroupConfigForTab(tab: chrome.tabs.Tab) {
 	try {
 		const groupsConfigs = getGroupsConfigurations();
-		console.log(tab);
 		const url = new URL(tab.url ?? '');
 		for (const config of groupsConfigs) {
 			for (const rule of config.rules) {
