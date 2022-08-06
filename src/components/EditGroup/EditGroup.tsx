@@ -143,7 +143,6 @@ export const EditGroup = () => {
 				fullWidth
 				label='Group name'
 				onKeyDown={(e) => {
-					console.log(e.key);
 					if (e.key === 'Enter') {
 						handleSave();
 					}

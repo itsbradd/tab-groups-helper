@@ -19,7 +19,7 @@ async function repeatAssignTabUntilSuccess(
 	tab: chrome.tabs.Tab
 ): Promise<number> {
 	try {
-		return await assignTabToGroup(groupId, tab);
+		return await assignTabToGroup(groupId, tab, tab.windowId);
 	} catch (e) {
 		return await repeatAssignTabUntilSuccess(groupId, tab);
 	}

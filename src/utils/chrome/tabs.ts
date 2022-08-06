@@ -1,10 +1,22 @@
 export async function assignTabToGroup(
 	groupId: number | undefined,
-	tab: chrome.tabs.Tab
+	tab: chrome.tabs.Tab,
+	windowId?: number
 ) {
-	return await chrome.tabs.group({
+	const options: chrome.tabs.GroupOptions = {
 		tabIds: tab.id,
-		groupId,
+	};
+
+	if (groupId !== undefined) {
+		options.groupId = groupId;
+	} else {
+		options.createProperties = {
+			windowId
+		}
+	}
+
+	return await chrome.tabs.group({
+		...options
 	});
 }
 
