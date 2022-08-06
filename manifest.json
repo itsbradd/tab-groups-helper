@@ -1,7 +1,7 @@
 {
 	"manifest_version": 3,
 	"name": "Tab Groups Helper",
-	"description": "Build an Extension!",
+	"description": "An extension to help organizing your tabs",
 	"version": "1.0",
 	"icons": {
 		"16": "assets/favicon-16x16.png",
