@@ -1,4 +1,4 @@
-export default [
+const colors: chrome.tabGroups.ColorEnum[] = [
 	'grey',
 	'blue',
 	'red',
@@ -8,4 +8,4 @@ export default [
 	'purple',
 	'cyan',
 	'orange',
-] as chrome.tabGroups.ColorEnum[];
+]
