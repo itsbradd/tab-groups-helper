@@ -11,12 +11,12 @@ export async function assignTabToGroup(
 		options.groupId = groupId;
 	} else {
 		options.createProperties = {
-			windowId
-		}
+			windowId,
+		};
 	}
 
 	return await chrome.tabs.group({
-		...options
+		...options,
 	});
 }
 

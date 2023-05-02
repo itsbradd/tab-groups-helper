@@ -42,6 +42,7 @@ Examples:
 - Props and events of the new component
 - How to migration from previous version?
 -->
+
 ...
 
 ---

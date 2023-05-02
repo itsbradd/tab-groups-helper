@@ -8,4 +8,4 @@ const colors: chrome.tabGroups.ColorEnum[] = [
 	'purple',
 	'cyan',
 	'orange',
-]
+];
