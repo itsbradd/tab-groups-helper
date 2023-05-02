@@ -1,7 +1,8 @@
 .popup {
 	min-width: 600px;
-	min-height: 620px;
-	padding: 0 6px;
+	min-height: 600px;
+	padding: 0 14px 50px;
+	box-sizing: border-box;
 
 	&__inner {
 		padding: 12px 0;
