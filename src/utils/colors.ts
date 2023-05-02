@@ -9,3 +9,5 @@ const colors: chrome.tabGroups.ColorEnum[] = [
 	'cyan',
 	'orange',
 ];
+
+export default colors;
